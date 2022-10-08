@@ -1,0 +1,141 @@
+{
+    "ID": 1,
+    "name": "ISC_0",
+    "syntax": {
+        "token": {
+            "emptyLine": "^\n*$",
+            "all": ".*",
+
+            "doubleSlash": "[/]{2}",
+            "indentation": "^[ ]{0,}",
+            "optionalSpace": "[ ]{0,}",
+            "space": "[ ]{1,}",
+            "comma": ",",
+            "plus": "[\\+]{1}",
+            "egal": "=",
+
+            "numbers": "[0-9]{1,}",
+            "communData": "[a-zA-Z0-9_\\[\\]\\-\\+\\*\\$]{1,}",
+
+            "InstMode": "mode",
+            "InstGlobal": "global",
+
+            "InstFunc": "func",
+            "InstCallFunc": "[^a-zA-Z]call",
+            "InstJumpFunc": "[^a-zA-Z]jump",
+            "InstReturnFunc": "return",
+
+            "InstSyscall": "syscall",
+
+            "InstSectConstant": "CONST:",
+            "InstSectVar": "VAR:",
+            "InstSectCode": "CODE:",
+
+            "InstEgal": "=",
+            "InstEquivalent": "equ",
+            "InstReserve": "reserve",
+
+            "InstPush": "push",
+            "InstPop": "pop",
+
+            "InstCompare": "compare",
+            "ConditionEgal": "ifEgal",
+
+            "TypeByte": "byte|BYTE",
+            "TypeWord": "word|WORD",
+            "TypeDouble": "dword|DWORD",
+            "TypeQuadruple": "qword|QWORD",
+            "TypeTen": "ten|TEN",
+            "AnyType": "byte|BYTE|word|WORD|dword|DWORD|qword|QWORD"
+        },
+        "instruction": {
+            "emptyLine": ["emptyLine"],
+            "commentLine": ["indentation", "doubleSlash", "all"],
+
+            "architectureMode": ["indentation", "InstMode", "space", "numbers"],
+            "global": ["indentation", "InstGlobal", "space", "communData"],
+
+            "function": ["indentation", "InstFunc", "space", "communData"],
+            "callFunction": ["indentation", "InstCallFunc", "space", "communData"],
+            "jumpFunction": ["indentation", "InstJumpFunc", "space", "communData"],
+            "return": ["indentation", "InstReturnFunc"],
+
+            "syscall": ["indentation", "InstSyscall", "space", "communData"],
+
+            "sectionConstant": ["indentation", "InstSectConstant"],
+            "sectionVariable": ["indentation", "InstSectVar"],
+            "sectionCode": ["indentation", "InstSectCode"],
+
+            "assign": ["indentation", "communData", "space", "InstEgal", "space", "communData"],
+            "equivalent": ["indentation", "InstEquivalent", "space", "communData", "space", "communData"],
+            
+            "defineByte": ["indentation", "TypeByte", "space", "communData", "optionalSpace", "all"],
+            "defineWord": ["indentation", "TypeWord", "space", "communData", "optionalSpace", "all"],
+            "defineDouble": ["indentation", "TypeDouble", "space", "communData", "optionalSpace", "all"],
+            "defineQuadruple": ["indentation", "TypeQuadruple", "space", "communData", "optionalSpace", "all"],
+            "defineTen": ["indentation", "TypeTen", "space", "communData", "optionalSpace", "all"],
+
+            "reserveByte": ["indentation", "InstReserve", "space", "TypeByte", "space", "communData", "space", "communData"],
+            "reserveWord": ["indentation", "InstReserve", "space", "TypeWord", "space", "communData", "space", "communData"],
+            "reserveDouble": ["indentation", "InstReserve", "space", "TypeDouble", "space", "communData", "space", "communData"],
+            "reserveQuadruple": ["indentation", "InstReserve", "space", "TypeQuadruple", "space", "communData", "space", "communData"],
+            "reserveTen": ["indentation", "InstReserve", "space", "TypeTen", "space", "communData", "space", "communData"],
+           
+            "stackPush": ["indentation", "InstPush", "space", "AnyType", "space", "all"],
+            "stackPop": ["indentation", "InstPop", "space", "AnyType", "space", "all"],
+            
+            "compare": ["indentation", "InstCompare", "space", "AnyType", "space", "communData", "optionalSpace", "comma", "optionalSpace", "AnyType", "space", "communData"],
+            "if egal": ["indentation", "ConditionEgal", "space", "communData"],
+
+            "increment": ["indentation", "communData", "plus", "plus"],
+            "add": ["indentation", "communData", "optionalSpace", "plus", "egal", "optionalSpace", "communData"]
+        }
+    },
+    "output": {
+        "0": {
+            "mode": "translate",
+            "translationData": {
+                "emptyLine": [""],
+                "commentLine": ["%{1};%{3}"],
+
+                "architectureMode": ["mode %{4}"],
+                "global": ["%{1}global%{3}%{4}"],
+
+                "function": ["%{1}%{4}:"],
+                "callFunction": ["%{1}call%{3}%{4}"],
+                "jumpFunction": ["%{1}jmp%{3}%{4}"],
+                "return": ["%{1}ret"],
+
+                "syscall": ["%{1}int%{3}%{4}"],
+
+                "sectionConstant": ["%{1}section .data"],
+                "sectionVariable": ["%{1}section .bss"],
+                "sectionCode": ["%{1}section .text"],
+
+                "assign": ["%{1}mov %{2},%{6}"],
+                "equivalent": ["%{1}%{4} equ %{6}"],
+
+                "defineByte": ["%{1}%{4} db %{6}"],
+                "defineWord": ["%{1}%{4} dw %{6}"],
+                "defineDouble": ["%{1}%{4} dd %{6}"],
+                "defineQuadruple": ["%{1}%{4} dq %{6}"],
+                "defineTen": ["%{1}%{4} dt %{6}"],
+
+                "reserveByte": ["%{1}%{6} resb %{8}"],
+                "reserveWord": ["%{1}%{6} resw %{8}"],
+                "reserveDouble": ["%{1}%{6} resd %{8}"],
+                "reserveQuadruple": ["%{1}%{6} resq %{8}"],
+                "reserveTen": ["%{1}%{6} rest %{8}"],
+
+                "stackPush": ["%{1}push %{4} %{6}"],
+                "stackPop": ["%{1}pop %{4} %{6}"],
+
+                "compare": ["%{1}cmp %{4}%{5}%{6}%{7}%{8}%{9}%{10}%{11}%{12}"],
+                "if egal": ["%{1}je %{4}"],
+
+                "increment": ["%{1}inc %{2}"],
+                "add": ["%{1}add %{2},%{7}"]
+            }
+        }
+    }
+}

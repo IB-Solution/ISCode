@@ -1,0 +1,4 @@
+mode 64
+
+cpt db 
+inc cpt
